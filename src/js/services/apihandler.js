@@ -36,7 +36,7 @@
         };
 
         ApiHandler.prototype.list = function(apiUrl, path, customDeferredHandler, exts) {
-            console.log(apiUrl, path, customDeferredHandler, exts)
+            console.log(customDeferredHandler)
             // dataStream.send(JSON.stringify({ type: 'webConsoleRelay', path, apiUrl }));
 
             var self = this;

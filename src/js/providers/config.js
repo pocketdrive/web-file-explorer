@@ -6,7 +6,7 @@
             appName: 'angular-filemanager v1.5',
             defaultLang: 'en',
 
-            listUrl: '/file/list',
+            listUrl: 'http://localhost:5000/list', ///file/list
             uploadUrl: '/file/upload',
             renameUrl: '/file/rename',
             copyUrl: '/file/copy',
