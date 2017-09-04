@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="angular-filemanager:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="angular-filemanager.war">
-      <element id="artifact" artifact-name="angular-filemanager:war exploded" />
-    </root>
-  </artifact>
-</component>
