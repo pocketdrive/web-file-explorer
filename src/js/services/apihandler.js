@@ -1,51 +1,15 @@
-const SocketCommunicator = function () {
-    this.connected = false;
-    this.ws = null;
-};
-
-SocketCommunicator.prototype.init = function ($websocket) {
-    this.ws = $websocket.$new('ws://localhost:8080');
-
-    this.ws.$on('$open', () => {
-        this.connected = true;
-        this.connectToCentralServer('someName', 'someDevice');
-        console.log('registering');
-    }).$on('response', (message) => { // it listents for 'incoming event'
-        console.log('something incoming from the server: ' + message);
-    });
-};
-
-SocketCommunicator.prototype.send = function (message) {
-    if (!this.connected) {
-        const int = setInterval(() => {
-            if (this.connected) {
-                this.ws.$emit('webConsoleRelay', {message: message, toName: 'anuradha', toId: 'device1234', fromName: 'someName', fromId: 'someDevice'});
-                clearInterval(int);
-            }
-        }, 1000);
-    } else {
-        this.ws.$emit('webConsoleRelay', {message: message, username: 'anuradha', deviceId: 'device1234'});
-    }
-};
-
-SocketCommunicator.prototype.connectToCentralServer = function (username, deviceId) {
-    const msg = {
-        username: username, deviceId: deviceId
-    };
-
-    this.ws.$emit('webConsoleRegister', msg);
-};
-
 (function (angular, $) {
 
     'use strict';
-    angular.module('FileManagerApp').service('apiHandler', ['$http', '$q', '$window', '$translate', 'Upload', '$websocket',
-        function ($http, $q, $window, $translate, Upload, $websocket) {
+    angular.module('FileManagerApp').service('apiHandler', ['$http', '$q', '$window', '$translate', 'Upload', 'sockHandler',
+        function ($http, $q, $window, $translate, Upload, sockHandler) {
 
             $http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-            var sockHandler = new SocketCommunicator();
-            sockHandler.init($websocket);
+            var sh = new sockHandler();
+            sh.init();
+
+
 
             var ApiHandler = function () {
                 this.inprocess = false;
@@ -57,8 +21,11 @@ SocketCommunicator.prototype.connectToCentralServer = function (username, device
                 if (!data || typeof data !== 'object') {
                     this.error = 'Error %s - Bridge response error, please check the API docs or this ajax response.'.replace('%s', code);
                 }
-                if (code == 404) {
+                if (code === 404) {
                     this.error = 'Error 404 - Backend bridge is not working, please check the ajax response.';
+                }
+                if (code === 503) {
+                    this.error = 'Error - Pocket Drive device cannot be reached at the moment.';
                 }
                 if (data.result && data.result.error) {
                     this.error = data.result.error;
@@ -88,15 +55,24 @@ SocketCommunicator.prototype.connectToCentralServer = function (username, device
                 self.inprocess = true;
                 self.error = '';
 
-                console.log('calling list');
-                sockHandler.send(data)
-                $http.post(apiUrl, data).success(function (data, code) {
-                    dfHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    dfHandler(data, deferred, code, 'Unknown error listing, check the response');
-                })['finally'](function () {
-                    self.inprocess = false;
-                });
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        dfHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        dfHandler({}, deferred, 503);
+                    }
+                 });
+                // $http.post(apiUrl, data).success(function (data, code) {
+                //     dfHandler(data, deferred, code);
+                //
+                //     console.log(data)
+                // }).error(function (data, code) {
+                //     dfHandler(data, deferred, code, 'Unknown error listing, check the response');
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
                 return deferred.promise;
             };
 

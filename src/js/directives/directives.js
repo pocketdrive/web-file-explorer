@@ -3,7 +3,6 @@
     var app = angular.module('FileManagerApp');
 
     app.directive('angularFilemanager', ['$parse', 'fileManagerConfig', function($parse, fileManagerConfig) {
-        console.log('in directive')
         return {
             restrict: 'EA',
             templateUrl: fileManagerConfig.tplPath + '/main.html'

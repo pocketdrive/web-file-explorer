@@ -23,10 +23,13 @@
             if (!data || typeof data !== 'object') {
                 this.error = 'Error %s - Bridge response error, please check the API docs or this ajax response.'.replace('%s', code);
             }
-            if (code == 404) {
+            if (code === 404) {
                 this.error = 'Error 404 - Backend bridge is not working, please check the ajax response.';
             }
-            if (code == 200) {
+            if (code === 503) {
+                this.error = 'Error - Pocket Drive device cannot be reached at the moment.';
+            }
+            if (code === 200) {
                 this.error = null;
             }
             if (!this.error && data.result && data.result.error) {
