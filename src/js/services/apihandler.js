@@ -91,13 +91,23 @@
 
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_copying'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+                // $http.post(apiUrl, data).success(function (data, code) {
+                //     self.deferredHandler(data, deferred, code);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_copying'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
                 return deferred.promise;
             };
 
@@ -111,13 +121,24 @@
                 };
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_moving'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+                //
+                // $http.post(apiUrl, data).success(function (data, code) {
+                //     self.deferredHandler(data, deferred, code);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_moving'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
                 return deferred.promise;
             };
 
@@ -131,13 +152,23 @@
 
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_deleting'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+                // $http.post(apiUrl, data).success(function (data, code) {
+                //     self.deferredHandler(data, deferred, code);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_deleting'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
                 return deferred.promise;
             };
 
@@ -227,13 +258,23 @@
                 };
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_renaming'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+                // $http.post(apiUrl, data).success(function (data, code) {
+                //     self.deferredHandler(data, deferred, code);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_renaming'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
                 return deferred.promise;
             };
 
@@ -373,13 +414,23 @@
 
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_creating_folder'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+                // $http.post(apiUrl, data).success(function (data, code) {
+                //     self.deferredHandler(data, deferred, code);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_creating_folder'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
 
                 return deferred.promise;
             };
