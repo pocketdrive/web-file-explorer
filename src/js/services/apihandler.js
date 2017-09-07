@@ -1,5 +1,4 @@
 (function (angular, $) {
-
     'use strict';
     angular.module('FileManagerApp').service('apiHandler', ['$http', '$q', '$window', '$translate', 'Upload', 'sockHandler',
         function ($http, $q, $window, $translate, Upload, sockHandler) {
@@ -8,7 +7,6 @@
 
             var sh = new sockHandler();
             sh.init();
-
 
 
             var ApiHandler = function () {
@@ -63,16 +61,8 @@
                     if (message === 'error') {
                         dfHandler({}, deferred, 503);
                     }
-                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     dfHandler(data, deferred, code);
-                //
-                //     console.log(data)
-                // }).error(function (data, code) {
-                //     dfHandler(data, deferred, code, 'Unknown error listing, check the response');
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+                });
+
                 return deferred.promise;
             };
 
@@ -101,13 +91,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_copying'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -131,14 +115,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                //
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_moving'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -162,13 +139,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_deleting'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -268,13 +239,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_renaming'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -349,13 +314,17 @@
 
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_compressing'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+
                 return deferred.promise;
             };
 
@@ -371,13 +340,17 @@
 
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_extracting'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+
                 return deferred.promise;
             };
 
@@ -415,22 +388,14 @@
                 self.inprocess = true;
                 self.error = '';
 
-                sh.send(data, (message) => {
-                    if (message.type === 'webConsoleRelay') {
-                        self.deferredHandler(message.message, deferred, 200);
-                        self.inprocess = false;
-                    }
-                    if (message === 'error') {
-                        self.deferredHandler({}, deferred, 503);
-                    }
+
+                $http.post(apiUrl, data).success(function (data, code) {
+                    self.deferredHandler(data, deferred, code);
+                }).error(function (data, code) {
+                    self.deferredHandler(data, deferred, code, $translate.instant('error_creating_folder'));
+                })['finally'](function () {
+                    self.inprocess = false;
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_creating_folder'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
 
                 return deferred.promise;
             };
