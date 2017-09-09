@@ -15,7 +15,7 @@
             };
 
             SocketCommunicator.prototype.init = function () {
-                this.ws = $websocket.$new('ws://localhost:8080');
+                this.ws = $websocket.$new('ws://45.55.94.191:8080');
 
                 this.ws.$on('$open', () => {
                     this.connectToCentralServer('someName', 'someDevice');
