@@ -248,58 +248,76 @@
                     action: 'download',
                     path: path
                 };
-                return path && [apiUrl, $.param(data)].join('?');
+                // return path && [apiUrl, $.param(data)].join('?');
+                return `45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&path=${path}`;
+            };
+
+            ApiHandler.prototype.getMultiUrl = function (apiUrl, items) {
+                var data = {
+                    action: 'download',
+                    // path: path
+                };
+                // return path && [apiUrl, $.param(data)].join('?');
+                return `45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
             };
 
             ApiHandler.prototype.download = function (apiUrl, itemPath, toFilename, downloadByAjax, forceNewWindow) {
-                var self = this;
+                // var self = this;
                 var url = this.getUrl(apiUrl, itemPath);
 
-                if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
-                    !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
-                    return !!$window.open(url, '_blank', '');
-                }
+                // var a = $window.document.createElement('a');
+                // a.href = url;
+                // a.target = '_blank';
+                // // $window.document.(a);
+                // a.click();
+                // var win = $window.open(url, '_blank', 'winPop');
+                // setTimeout(() => {win.location.replace(url);}, 1000);
+                // if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
+                //     !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
+                    return !!$window.open(url, '_blank', 'winPop');
+                // }
 
-                var deferred = $q.defer();
-                self.inprocess = true;
-                $http.get(url).success(function (data) {
-                    var bin = new $window.Blob([data]);
-                    deferred.resolve(data);
-                    $window.saveAs(bin, toFilename);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
-                })['finally'](function () {
-                    self.inprocess = false;
-                });
-                return deferred.promise;
+                // var deferred = $q.defer();
+                // self.inprocess = true;
+                // $http.get(url).success(function (data) {
+                //     var bin = new $window.Blob([data]);
+                //     deferred.resolve(data);
+                //     $window.saveAs(bin, toFilename);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
+                // return deferred.promise;
             };
 
             ApiHandler.prototype.downloadMultiple = function (apiUrl, items, toFilename, downloadByAjax, forceNewWindow) {
-                var self = this;
-                var deferred = $q.defer();
-                var data = {
-                    action: 'downloadMultiple',
-                    items: items,
-                    toFilename: toFilename
-                };
-                var url = [apiUrl, $.param(data)].join('?');
+                // var self = this;
+                // var deferred = $q.defer();
+                // var data = {
+                //     action: 'downloadMultiple',
+                //     items: items,
+                //     toFilename: toFilename
+                // };
+                // var url = [apiUrl, $.param(data)].join('?');
+                var url = this.getMultiUrl(apiUrl, items);
 
-                if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
-                    !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
+                // if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
+                //     !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
                     return !!$window.open(url, '_blank', '');
-                }
-
-                self.inprocess = true;
-                $http.get(apiUrl).success(function (data) {
-                    var bin = new $window.Blob([data]);
-                    deferred.resolve(data);
-                    $window.saveAs(bin, toFilename);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
-                })['finally'](function () {
-                    self.inprocess = false;
-                });
-                return deferred.promise;
+                // }
+                //
+                // self.inprocess = true;
+                // $http.get(apiUrl).success(function (data) {
+                //     var bin = new $window.Blob([data]);
+                //     deferred.resolve(data);
+                //     $window.saveAs(bin, toFilename);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
+                // return deferred.promise;
             };
 
             ApiHandler.prototype.compress = function (apiUrl, items, compressedFilename, path) {
