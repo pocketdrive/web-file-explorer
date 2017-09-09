@@ -4,8 +4,12 @@
 (function (angular) {
 
     'use strict';
-    angular.module('FileManagerApp').service('sockHandler', ['$websocket',
-        function ($websocket) {
+    angular.module('FileManagerApp').service('sockHandler', ['$websocket', 'uuid4',
+        function ($websocket, uuid4) {
+
+            const sessionId = uuid4.generate();
+            const username = `name-${sessionId}`;
+            const deviceId = `id-${sessionId}`;
 
             const SocketCommunicator = function () {
                 this.connected = false;
@@ -18,7 +22,7 @@
                 this.ws = $websocket.$new('ws://45.55.94.191:8080');
 
                 this.ws.$on('$open', () => {
-                    this.connectToCentralServer('someName', 'someDevice');
+                    this.connectToCentralServer(username, deviceId);
                     this.connected = true;
                     console.log('registering');
                 }).$on('$message', (message) => {
@@ -37,8 +41,8 @@
                                 message: message,
                                 toName: 'anuradha',
                                 toId: 'device1234',
-                                fromName: 'someName',
-                                fromId: 'someDevice'
+                                fromName: username,
+                                fromId: deviceId
                             });
                             clearInterval(int);
                         }
@@ -48,8 +52,8 @@
                         message: message,
                         toName: 'anuradha',
                         toId: 'device1234',
-                        fromName: 'someName',
-                        fromId: 'someDevice'
+                        fromName: username,
+                        fromId: deviceId
                     });
                 }
                 return this.ws;

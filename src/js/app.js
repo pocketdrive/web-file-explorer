@@ -1,6 +1,6 @@
 (function(window, angular, $) {
     'use strict';
-    angular.module('FileManagerApp', ['pascalprecht.translate', 'ngFileUpload', 'ngWebsocket']);
+    angular.module('FileManagerApp', ['pascalprecht.translate', 'ngFileUpload', 'ngWebsocket', 'uuid']);
 
     /**
      * jQuery inits
