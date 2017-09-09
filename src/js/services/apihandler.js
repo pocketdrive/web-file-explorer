@@ -249,7 +249,7 @@
                     path: path
                 };
                 // return path && [apiUrl, $.param(data)].join('?');
-                return `45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&path=${path}`;
+                return `http://45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&path=${path}`;
             };
 
             ApiHandler.prototype.getMultiUrl = function (apiUrl, items) {
@@ -258,7 +258,7 @@
                     // path: path
                 };
                 // return path && [apiUrl, $.param(data)].join('?');
-                return `45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
+                return `http://45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
             };
 
             ApiHandler.prototype.download = function (apiUrl, itemPath, toFilename, downloadByAjax, forceNewWindow) {
