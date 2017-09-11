@@ -1,11 +1,11 @@
 /**
  * Created by anuradhawick on 9/5/17.
  */
-(function (angular) {
+(function (angular, $) {
 
     'use strict';
-    angular.module('FileManagerApp').service('sockHandler', ['$websocket', 'uuid4',
-        function ($websocket, uuid4) {
+    angular.module('FileManagerApp').service('sockHandler', ['$websocket', 'uuid4', 'fileManagerConfig',
+        function ($websocket, uuid4, fileManagerConfig) {
 
             const sessionId = uuid4.generate();
             const username = `name-${sessionId}`;
@@ -19,7 +19,7 @@
             };
 
             SocketCommunicator.prototype.init = function () {
-                this.ws = $websocket.$new('ws://45.55.94.191:8080');
+                this.ws = $websocket.$new(`ws://${fileManagerConfig.apiUrl}:${fileManagerConfig.apiPort}`);
 
                 this.ws.$on('$open', () => {
                     this.connectToCentralServer(username, deviceId);
@@ -70,4 +70,4 @@
             return SocketCommunicator;
 
         }]);
-})(angular);
+})(angular, jQuery);

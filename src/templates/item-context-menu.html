@@ -19,6 +19,12 @@
             </a>
         </li>
 
+        <li ng-show="config.allowedActions.download && !selectionHas('dir') && singleSelection()">
+            <a href="" tabindex="-1" ng-click="modal('linkshare')">
+                <i class="glyphicon glyphicon-share"></i> {{'generate_sharable_link' | translate}}
+            </a>
+        </li>
+
         <li ng-show="config.allowedActions.downloadMultiple && !selectionHas('dir') && !singleSelection()">
             <a href="" tabindex="-1" ng-click="download()">
                 <i class="glyphicon glyphicon-cloud-download"></i> {{'download_as_zip' | translate}}

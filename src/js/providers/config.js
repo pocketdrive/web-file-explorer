@@ -1,10 +1,17 @@
 (function(angular) {
     'use strict';
     angular.module('FileManagerApp').provider('fileManagerConfig', function() {
+        console.log(window.localStorage);
+
 
         var values = {
             appName: 'angular-filemanager v1.5',
             defaultLang: 'en',
+
+            apiUrl: 'localhost',
+            apiPort: '8080',
+            activeUser: 'anuradha',
+            activeDevice: 'device1234',
 
             listUrl: '/file/list', ///file/list
             uploadUrl: '/file/upload',
@@ -44,7 +51,7 @@
                 pickFolders: false
             },
 
-            multipleDownloadFileName: 'angular-filemanager.zip',
+            multipleDownloadFileName: 'pocket-drive-download.zip',
             filterFileExtensions: [],
             showExtensionIcons: true,
             showSizeForDirectories: false,
