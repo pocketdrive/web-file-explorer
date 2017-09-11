@@ -206,6 +206,12 @@
             return $scope.apiMiddleware.downloadMultiple($scope.temps);
         };
 
+        $scope.getSharableLink = function() {
+            var item = $scope.singleSelection();
+            alert(item);
+            $scope.modal('linkshare', true);
+        };
+
         $scope.copy = function() {
             var item = $scope.singleSelection();
             if (item) {

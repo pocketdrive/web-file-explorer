@@ -1,5 +1,4 @@
 (function (angular, $) {
-
     'use strict';
     angular.module('FileManagerApp').service('apiHandler', ['$http', '$q', '$window', '$translate', 'Upload', 'sockHandler',
         function ($http, $q, $window, $translate, Upload, sockHandler) {
@@ -8,7 +7,6 @@
 
             var sh = new sockHandler();
             sh.init();
-
 
 
             var ApiHandler = function () {
@@ -63,16 +61,8 @@
                     if (message === 'error') {
                         dfHandler({}, deferred, 503);
                     }
-                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     dfHandler(data, deferred, code);
-                //
-                //     console.log(data)
-                // }).error(function (data, code) {
-                //     dfHandler(data, deferred, code, 'Unknown error listing, check the response');
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+                });
+
                 return deferred.promise;
             };
 
@@ -101,13 +91,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_copying'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -131,14 +115,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                //
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_moving'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -162,13 +139,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_deleting'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -268,13 +239,7 @@
                         self.deferredHandler({}, deferred, 503);
                     }
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_renaming'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
+
                 return deferred.promise;
             };
 
@@ -283,58 +248,76 @@
                     action: 'download',
                     path: path
                 };
-                return path && [apiUrl, $.param(data)].join('?');
+                // return path && [apiUrl, $.param(data)].join('?');
+                return `http://45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&path=${path}`;
+            };
+
+            ApiHandler.prototype.getMultiUrl = function (apiUrl, items) {
+                var data = {
+                    action: 'download',
+                    // path: path
+                };
+                // return path && [apiUrl, $.param(data)].join('?');
+                return `http://45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
             };
 
             ApiHandler.prototype.download = function (apiUrl, itemPath, toFilename, downloadByAjax, forceNewWindow) {
-                var self = this;
+                // var self = this;
                 var url = this.getUrl(apiUrl, itemPath);
 
-                if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
-                    !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
-                    return !!$window.open(url, '_blank', '');
-                }
+                // var a = $window.document.createElement('a');
+                // a.href = url;
+                // a.target = '_blank';
+                // // $window.document.(a);
+                // a.click();
+                // var win = $window.open(url, '_blank', 'winPop');
+                // setTimeout(() => {win.location.replace(url);}, 1000);
+                // if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
+                //     !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
+                    return !!$window.open(url, '_blank', 'winPop');
+                // }
 
-                var deferred = $q.defer();
-                self.inprocess = true;
-                $http.get(url).success(function (data) {
-                    var bin = new $window.Blob([data]);
-                    deferred.resolve(data);
-                    $window.saveAs(bin, toFilename);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
-                })['finally'](function () {
-                    self.inprocess = false;
-                });
-                return deferred.promise;
+                // var deferred = $q.defer();
+                // self.inprocess = true;
+                // $http.get(url).success(function (data) {
+                //     var bin = new $window.Blob([data]);
+                //     deferred.resolve(data);
+                //     $window.saveAs(bin, toFilename);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
+                // return deferred.promise;
             };
 
             ApiHandler.prototype.downloadMultiple = function (apiUrl, items, toFilename, downloadByAjax, forceNewWindow) {
-                var self = this;
-                var deferred = $q.defer();
-                var data = {
-                    action: 'downloadMultiple',
-                    items: items,
-                    toFilename: toFilename
-                };
-                var url = [apiUrl, $.param(data)].join('?');
+                // var self = this;
+                // var deferred = $q.defer();
+                // var data = {
+                //     action: 'downloadMultiple',
+                //     items: items,
+                //     toFilename: toFilename
+                // };
+                // var url = [apiUrl, $.param(data)].join('?');
+                var url = this.getMultiUrl(apiUrl, items);
 
-                if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
-                    !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
+                // if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
+                //     !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
                     return !!$window.open(url, '_blank', '');
-                }
-
-                self.inprocess = true;
-                $http.get(apiUrl).success(function (data) {
-                    var bin = new $window.Blob([data]);
-                    deferred.resolve(data);
-                    $window.saveAs(bin, toFilename);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
-                })['finally'](function () {
-                    self.inprocess = false;
-                });
-                return deferred.promise;
+                // }
+                //
+                // self.inprocess = true;
+                // $http.get(apiUrl).success(function (data) {
+                //     var bin = new $window.Blob([data]);
+                //     deferred.resolve(data);
+                //     $window.saveAs(bin, toFilename);
+                // }).error(function (data, code) {
+                //     self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
+                // })['finally'](function () {
+                //     self.inprocess = false;
+                // });
+                // return deferred.promise;
             };
 
             ApiHandler.prototype.compress = function (apiUrl, items, compressedFilename, path) {
@@ -349,13 +332,17 @@
 
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_compressing'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+
                 return deferred.promise;
             };
 
@@ -371,13 +358,17 @@
 
                 self.inprocess = true;
                 self.error = '';
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_extracting'));
-                })['finally'](function () {
-                    self.inprocess = false;
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
+
                 return deferred.promise;
             };
 
@@ -415,22 +406,14 @@
                 self.inprocess = true;
                 self.error = '';
 
-                sh.send(data, (message) => {
-                    if (message.type === 'webConsoleRelay') {
-                        self.deferredHandler(message.message, deferred, 200);
-                        self.inprocess = false;
-                    }
-                    if (message === 'error') {
-                        self.deferredHandler({}, deferred, 503);
-                    }
+
+                $http.post(apiUrl, data).success(function (data, code) {
+                    self.deferredHandler(data, deferred, code);
+                }).error(function (data, code) {
+                    self.deferredHandler(data, deferred, code, $translate.instant('error_creating_folder'));
+                })['finally'](function () {
+                    self.inprocess = false;
                 });
-                // $http.post(apiUrl, data).success(function (data, code) {
-                //     self.deferredHandler(data, deferred, code);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_creating_folder'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
 
                 return deferred.promise;
             };

@@ -1,6 +1,7 @@
 (function(window, angular, $) {
     'use strict';
-    angular.module('FileManagerApp', ['pascalprecht.translate', 'ngFileUpload', 'ngWebsocket', 'ngRoute','ngCookies' ])
+
+    angular.module('FileManagerApp', ['pascalprecht.translate', 'ngFileUpload', 'ngWebsocket', 'ngRoute','ngCookies','uuid' ])
         .config(config)
         .run(run);
 
