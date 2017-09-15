@@ -1,15 +1,18 @@
-(function(window, angular, $) {
+(function (window, angular, $) {
     'use strict';
 
-    angular.module('FileManagerApp', ['pascalprecht.translate', 'ngFileUpload', 'ngWebsocket', 'ngRoute','ngCookies','uuid' ])
+    angular.module('FileManagerApp', ['pascalprecht.translate', 'ngFileUpload', 'ngWebsocket', 'ngRoute', 'ngCookies', 'uuid',
+        'ngFlash'])
         .config(config)
         .run(run);
 
     config.$inject = ['$routeProvider', '$locationProvider'];
+
     function config($routeProvider, $locationProvider) {
+        console.log("In config");
         $routeProvider
 
-            .when('/login', {
+            .when('/', {
                 controller: 'LoginController',
                 templateUrl: '../../src/templates/signin.html',
                 controllerAs: 'vm'
@@ -21,22 +24,30 @@
                 controllerAs: 'vm'
             })
 
-            .otherwise({ redirectTo: '/explorer' });
+            .otherwise({redirectTo: '/'});
+
+        $locationProvider.html5Mode(true);
+
     }
 
     run.$inject = ['$rootScope', '$location', '$cookies', '$http'];
+
     function run($rootScope, $location, $cookies, $http) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookies.getObject('globals') || {};
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
-        }
+        // if ($rootScope.globals.currentUser) {
+        //     $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
+        // }
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
+
             // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+            var restrictedPage = $.inArray($location.path(), ['/']) === -1;
             var loggedIn = $rootScope.globals.currentUser;
+            console.log(restrictedPage);
             if (restrictedPage && !loggedIn) {
+                $location.path('/');
+            }else if(loggedIn){
                 $location.path('/explorer');
             }
         });
@@ -45,17 +56,17 @@
     /**
      * jQuery inits
      */
-    $(window.document).on('shown.bs.modal', '.modal', function() {
-        window.setTimeout(function() {
+    $(window.document).on('shown.bs.modal', '.modal', function () {
+        window.setTimeout(function () {
             $('[autofocus]', this).focus();
         }.bind(this), 100);
     });
 
-    $(window.document).on('click', function() {
+    $(window.document).on('click', function () {
         $('#context-menu').hide();
     });
 
-    $(window.document).on('contextmenu', '.main-navigation .table-files tr.item-list:has("td"), .item-list', function(e) {
+    $(window.document).on('contextmenu', '.main-navigation .table-files tr.item-list:has("td"), .item-list', function (e) {
         var menu = $('#context-menu');
 
         if (e.pageX >= window.innerWidth - menu.width()) {
@@ -72,8 +83,8 @@
         e.preventDefault();
     });
 
-    if (! Array.prototype.find) {
-        Array.prototype.find = function(predicate) {
+    if (!Array.prototype.find) {
+        Array.prototype.find = function (predicate) {
             if (this == null) {
                 throw new TypeError('Array.prototype.find called on null or undefined');
             }
@@ -94,5 +105,5 @@
             return undefined;
         };
     }
- 
+
 })(window, angular, jQuery);

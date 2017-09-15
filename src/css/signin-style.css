@@ -7,6 +7,9 @@
     /*line-height: 30px;*/
     /*text-align: center;*/
 /*}*/
+ body .top-content{
+	background-image: url("../img/1.jpg");
+}
 
 .top-content strong { font-weight: 500; }
 
