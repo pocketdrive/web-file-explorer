@@ -320,6 +320,31 @@
                 // return deferred.promise;
             };
 
+            ApiHandler.prototype.shareLink = function (apiUrl, item) {
+                var self = this;
+                var deferred = $q.defer();
+                var data = {
+                    action: 'linkshare',
+                    item: item
+                };
+                
+                self.inprocess = true;
+                self.error = '';
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
+                });
+
+                return deferred.promise;
+            };
+
+
             ApiHandler.prototype.compress = function (apiUrl, items, compressedFilename, path) {
                 var self = this;
                 var deferred = $q.defer();

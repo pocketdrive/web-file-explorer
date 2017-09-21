@@ -67,6 +67,7 @@
             generate_sharable_link: 'Get link',
             ok: 'ok',
             copy_the_sharable_link_for: 'Copy the sharable link for',
+            generate_link: 'Generate Link',
             go_back: 'Go back',
             wait: 'Wait',
             move: 'Move',

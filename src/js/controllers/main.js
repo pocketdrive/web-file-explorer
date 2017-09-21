@@ -20,6 +20,7 @@
             $scope.viewTemplate = $storage.getItem('viewTemplate') || 'main-icons.html';
             $scope.fileList = [];
             $scope.temps = [];
+            $scope.shareLinkTemp = null;
 
             $scope.$watch('temps', function() {
                 if ($scope.singleSelection()) {
@@ -49,6 +50,11 @@
                 }
                 $translate.use($storage.getItem('language') || fileManagerConfig.defaultLang);
             };
+            
+            $scope.clearLink = function() {
+                $scope.shareLinkTemp = null;
+                return true;
+            }
 
             $scope.isSelected = function(item) {
                 return $scope.temps.indexOf(item) !== -1;
@@ -208,10 +214,14 @@
             };
 
             $scope.getSharableLink = function() {
-                var item = $scope.singleSelection();
-                alert(item);
-                $scope.modal('linkshare', true);
+                $scope.shareLinkTemp = null;
+                var item = $scope.singleSelection().model.fullPath();
+                $scope.apiMiddleware.shareLink($scope.singleSelection().model.fullPath()).then(function(data) {
+                    $scope.shareLinkTemp = `http://45.55.94.191:4200/anuradha/device1234/${data.result.id}`;
+                });
             };
+
+            $
 
             $scope.copy = function() {
                 var item = $scope.singleSelection();

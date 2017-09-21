@@ -11,7 +11,7 @@
             apiUrl: 'localhost',
             apiPort: '8080',
             activeUser: 'anuradha',
-            activeDevice: 'device1234',
+            activeDevice: 'PD',
 
             listUrl: '/file/list', ///file/list
             uploadUrl: '/file/upload',

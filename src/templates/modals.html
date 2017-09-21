@@ -383,14 +383,14 @@
                 <h4 class="modal-title">{{'generate_sharable_link' | translate}}</h4>
             </div>
             <div class="modal-body">
-                <label class="radio">{{'copy_the_sharable_link_for' | translate}} <b>{{singleSelection() && singleSelection().model.name}}</b></label>
-                <input class="form-control" ng-model="singleSelection().tempModel.name" autofocus="autofocus" readonly>
+                <label class="radio">{{'copy_the_sharable_link_for' | translate}} <b>{{singleSelection().tempModel.name}}</b></label>
+                <input class="form-control" ng-model="shareLinkTemp" autofocus="autofocus" readonly>
 
                 <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">{{"cancel" | translate}}</button>
-                <button type="submit" class="btn btn-primary" ng-disabled="apiMiddleware.apiHandler.inprocess">{{'ok' | translate}}</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="apiMiddleware.apiHandler.inprocess">{{'generate_link' | translate}}</button>
             </div>
         </form>
     </div>
