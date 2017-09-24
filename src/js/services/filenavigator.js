@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('FileManagerApp').service('fileNavigator', [
-        'apiMiddleware', 'fileManagerConfig', 'item', function (ApiMiddleware, fileManagerConfig, Item) {
+        '$rootScope', 'apiMiddleware', 'fileManagerConfig', 'item', function ($rootScope, ApiMiddleware, fileManagerConfig, Item) {
 
             var FileNavigator = function () {
                 this.apiMiddleware = new ApiMiddleware();
@@ -10,6 +10,10 @@
                 this.currentPath = this.getBasePath();
                 this.history = [];
                 this.error = '';
+                this.deviceId = "";
+                this.deviceName = $rootScope.globals.currentUser.device.length ? $rootScope.globals.currentUser.device[0].name
+                    : $rootScope.globals.currentUser.device.name;
+                this.historyIndex = 0;
 
                 this.onRefresh = function () {
                 };
@@ -28,7 +32,7 @@
                     this.error = 'Error 404 - Backend bridge is not working, please check the ajax response.';
                 }
                 if (code === 503) {
-                    this.error = 'Error - Pocket Drive device cannot be reached at the moment.';
+                    this.error = 'Error - Pocket Drive device ' + this.deviceName + ' cannot be reached at the moment.';
                 }
                 if (code === 200) {
                     this.error = null;
@@ -64,15 +68,17 @@
                     self.fileList = (data.result || []).map(function (file) {
                         return new Item(file, self.currentPath);
                     });
+
+                }).finally(function () {
                     self.buildTree(path);
                     self.onRefresh();
-                }).finally(function () {
                     self.requesting = false;
                 });
             };
 
             FileNavigator.prototype.buildTree = function (path) {
                 var flatNodes = [], selectedNode = {};
+                this.counter++;
 
                 function recursive(parent, item, path) {
                     var absName = path ? (path + '/' + item.model.name) : item.model.name;
@@ -110,19 +116,61 @@
                     })[0];
                 }
 
-                //!this.history.length && this.history.push({name: '', nodes: []});
-                !this.history.length && this.history.push({name: this.getBasePath()[0] || '', nodes: []});
-                flatten(this.history[0], flatNodes);
-                selectedNode = findNode(flatNodes, path);
-                selectedNode && (selectedNode.nodes = []);
-
-                for (var o in this.fileList) {
-                    var item = this.fileList[o];
-                    item instanceof Item && item.isFolder() && recursive(this.history[0], item, path);
+                if (!this.history.length) {
+                    let internalCounter = -1;
+                    if (!$rootScope.globals.currentUser.device.length) {
+                        this.history.push({
+                            name: $rootScope.globals.currentUser.device.name,
+                            nodes: [],
+                            deviceID: $rootScope.globals.currentUser.device.uuid,
+                            count: ++internalCounter
+                        })
+                    } else {
+                        for (let device of $rootScope.globals.currentUser.device) {
+                            this.history.push({
+                                name: device.name,
+                                nodes: [],
+                                deviceID: device.uuid,
+                                count: ++internalCounter
+                            })
+                        }
+                    }
                 }
+
+                for (let n = 0; n < this.history.length; ++n) {
+
+                    if (n === this.historyIndex) {
+                        flatten(this.history[n], flatNodes);
+                        selectedNode = findNode(flatNodes, path);
+                        selectedNode && (selectedNode.nodes = []);
+
+                        for (var o in this.fileList) {
+                            var item = this.fileList[o];
+                            item instanceof Item && item.isFolder() && recursive(this.history[n], item, path);
+                        }
+                    } else {
+                        this.history[n].nodes = [];
+                    }
+                    this.history[n].name = $rootScope.globals.currentUser.device.length ? $rootScope.globals.currentUser.device[n].name
+                        : $rootScope.globals.currentUser.device.name
+                }
+
             };
 
+            FileNavigator.prototype.getDetails = function (item) {
+                if (item.deviceID) {
+                    this.deviceId = item.deviceID;
+                    this.historyIndex = item.count;
+                    this.deviceName = item.name;
+                }
+                this.apiMiddleware.trackChanges(this.deviceId, this.deviceName);
+            };
+
+
             FileNavigator.prototype.folderClick = function (item) {
+                for(let historyItem of this.history){
+                    historyItem.name="";
+                }
                 this.currentPath = [];
                 if (item && item.isFolder()) {
                     this.currentPath = item.model.fullPath().split('/').splice(1);

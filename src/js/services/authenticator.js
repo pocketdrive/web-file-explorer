@@ -13,7 +13,6 @@
             Authenticator.prototype.login = function (username, password, callback) {
                 var self = this;
                 var response = {success: false, message: ''};
-                // self.ClearCredentials();
                 var data = {
                     username: username,
                     password: password,
@@ -22,10 +21,12 @@
                 $http.post(`http://${fileManagerConfig.apiUrl}:${fileManagerConfig.apiPort}/login`, data).success(function (data, code) {
 
                     if (data.success) {
-                        self.SetCredentials(username);
+                        self.SetCredentials(username,data.device);
                         response = {success: true};
-                    } else {
+                    } else if(!data.success && data.message==="Invalid"){
                         response = {success: false, message: 'Invalid credentials !!'};
+                    }else{
+                        response = {success: false, message: 'Currently no pocket drive device is attached with this user'};
                     }
                     callback(response);
 
@@ -35,11 +36,12 @@
                 });
             };
 
-            Authenticator.prototype.SetCredentials = function (username) {
+            Authenticator.prototype.SetCredentials = function (username,device) {
 
                 $rootScope.globals = {
                     currentUser: {
-                        username: username
+                        username: username,
+                        device : device
                     }
                 };
 

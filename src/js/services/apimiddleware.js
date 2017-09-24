@@ -29,6 +29,10 @@
             return this.apiHandler.shareLink(fileManagerConfig.listUrl, item);
         };
 
+        ApiMiddleware.prototype.trackChanges = function(deviceID,deviceName){
+            this.apiHandler.trackChanges(deviceID,deviceName);
+        };
+
         ApiMiddleware.prototype.copy = function(files, path) {
             var items = this.getFileList(files);
             var singleFilename = items.length === 1 ? files[0].tempModel.name : undefined;

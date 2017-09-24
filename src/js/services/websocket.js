@@ -4,25 +4,27 @@
 (function (angular, $) {
 
     'use strict';
-    angular.module('FileManagerApp').service('sockHandler', ['$websocket', 'uuid4', 'fileManagerConfig',
-        function ($websocket, uuid4, fileManagerConfig) {
+    angular.module('FileManagerApp').service('sockHandler', ['$websocket', 'uuid4', 'fileManagerConfig','$rootScope',
+        function ($websocket, uuid4, fileManagerConfig,$rootScope) {
 
             const sessionId = uuid4.generate();
-            const username = `name-${sessionId}`;
             const deviceId = `id-${sessionId}`;
+            const username = $rootScope.globals.currentUser.username;
 
+           // const fileNavigator =new fileNavigator();
             const SocketCommunicator = function () {
                 this.connected = false;
                 this.ws = null;
                 this.callback = null;
-                console.log('making instance')
+                this.PDdeviceID = $rootScope.globals.currentUser.device.length ? $rootScope.globals.currentUser.device[0].uuid
+                    :$rootScope.globals.currentUser.device.uuid;
             };
 
             SocketCommunicator.prototype.init = function () {
                 this.ws = $websocket.$new(`ws://${fileManagerConfig.apiUrl}:${fileManagerConfig.apiPort}`);
 
                 this.ws.$on('$open', () => {
-                    this.connectToCentralServer(username, deviceId);
+                    this.connectToCentralServer(deviceId);
                     this.connected = true;
                     console.log('registering');
                 }).$on('$message', (message) => {
@@ -32,16 +34,14 @@
             };
 
             SocketCommunicator.prototype.send = function (message, callback) {
-                console.log('sending message');
                 this.callback = callback;
                 if (!this.connected) {
                     const int = setInterval(() => {
                         if (this.connected) {
                             this.ws.$emit('webConsoleRelay', {
                                 message: message,
-                                toName: 'anuradha',
-                                toId: 'device1234',
-                                fromName: username,
+                                toName: username,
+                                toId: this.PDdeviceID,
                                 fromId: deviceId
                             });
                             clearInterval(int);
@@ -50,20 +50,18 @@
                 } else {
                     this.ws.$emit('webConsoleRelay', {
                         message: message,
-                        toName: 'anuradha',
-                        toId: 'device1234',
-                        fromName: username,
+                        toName: username,
+                        toId: this.PDdeviceID,
                         fromId: deviceId
                     });
                 }
                 return this.ws;
             };
 
-            SocketCommunicator.prototype.connectToCentralServer = function (username, deviceId) {
+            SocketCommunicator.prototype.connectToCentralServer = function (deviceId) {
                 const msg = {
-                    username: username, deviceId: deviceId
+                    deviceId: deviceId
                 };
-
                 this.ws.$emit('webConsoleRegister', msg);
             };
 

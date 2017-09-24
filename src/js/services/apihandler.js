@@ -12,10 +12,18 @@
             var ApiHandler = function () {
                 this.inprocess = false;
                 this.asyncSuccess = false;
+                this.deviceName = "";
                 this.error = '';
             };
 
+            ApiHandler.prototype.trackChanges = function(deviceID,deviceName){
+              sh.PDdeviceID  = deviceID;
+              this.deviceName = deviceName;
+
+            };
+
             ApiHandler.prototype.deferredHandler = function (data, deferred, code, defaultMsg) {
+
                 if (!data || typeof data !== 'object') {
                     this.error = 'Error %s - Bridge response error, please check the API docs or this ajax response.'.replace('%s', code);
                 }
@@ -23,7 +31,7 @@
                     this.error = 'Error 404 - Backend bridge is not working, please check the ajax response.';
                 }
                 if (code === 503) {
-                    this.error = 'Error - Pocket Drive device cannot be reached at the moment.';
+                    this.error = 'Error - Pocket Drive device '+this.deviceName+' cannot be reached at the momentttttt.';
                 }
                 if (data.result && data.result.error) {
                     this.error = data.result.error;
