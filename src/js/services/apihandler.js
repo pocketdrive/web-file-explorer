@@ -439,13 +439,14 @@
                 self.inprocess = true;
                 self.error = '';
 
-
-                $http.post(apiUrl, data).success(function (data, code) {
-                    self.deferredHandler(data, deferred, code);
-                }).error(function (data, code) {
-                    self.deferredHandler(data, deferred, code, $translate.instant('error_creating_folder'));
-                })['finally'](function () {
-                    self.inprocess = false;
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
                 });
 
                 return deferred.promise;

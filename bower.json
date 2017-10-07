@@ -32,7 +32,8 @@
     "angular-route": "1.5.0",
     "angular-cookies": "1.5.0",
     "angular-uuid": "^0.1.0",
-    "angular-flash-alert": "^2.4.0"
+    "angular-flash-alert": "^2.4.0",
+    "angularMultipleSelect": "angular-multiple-select#^1.1.2"
   },
   "resolutions": {
     "angular": "~1.0.7"

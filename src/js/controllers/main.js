@@ -21,6 +21,7 @@
             $scope.fileList = [];
             $scope.temps = [];
             $scope.shareLinkTemp = null;
+            $scope.tempdata = {};
 
             $scope.$watch('temps', function() {
                 if ($scope.singleSelection()) {
@@ -50,7 +51,16 @@
                 }
                 $translate.use($storage.getItem('language') || fileManagerConfig.defaultLang);
             };
-            
+
+            $scope.optionsList = [
+                {id: 1,  name : "Jangi"},
+                {id: 2,  name : "C"},
+                {id: 3,  name : "C++"},
+                {id: 4,  name : "AngularJs"},
+                {id: 5,  name : "JavaScript"}
+            ];
+
+
             $scope.clearLink = function() {
                 $scope.shareLinkTemp = null;
                 return true;
@@ -120,8 +130,11 @@
             };
 
             $scope.prepareNewFolder = function() {
+                console.log("this creates error");
                 var item = new Item(null, $scope.fileNavigator.currentPath);
+                console.log("Or this error");
                 $scope.temps = [item];
+                console.log("Or this");
                 return item;
             };
 
@@ -181,6 +194,7 @@
 
             $scope.modalWithPathSelector = function(id) {
                 $rootScope.selectedModalPath = $scope.fileNavigator.currentPath;
+                console.log($rootScope.selectedModalPath);
                 return $scope.modal(id);
             };
 
@@ -196,10 +210,11 @@
             };
 
             $scope.changePermissions = function() {
-                $scope.apiMiddleware.changePermissions($scope.temps, $scope.temp).then(function() {
-                    $scope.fileNavigator.refresh();
-                    $scope.modal('changepermissions', true);
-                });
+                console.log($scope.tempdata.selectedList);
+                // $scope.apiMiddleware.changePermissions($scope.temps, $scope.temp).then(function() {
+                //     $scope.fileNavigator.refresh();
+                //     $scope.modal('changepermissions', true);
+                // });
             };
 
             $scope.download = function() {
@@ -305,6 +320,7 @@
                     $scope.apiMiddleware.apiHandler.error = $translate.instant('error_cannot_move_same_path');
                     return false;
                 }
+                // console.log($scope.temps);
                 $scope.apiMiddleware.move($scope.temps, $rootScope.selectedModalPath).then(function() {
                     $scope.fileNavigator.refresh();
                     $scope.modal('move', true);

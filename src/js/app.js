@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('FileManagerApp', ['pascalprecht.translate', 'ngFileUpload', 'ngWebsocket', 'ngRoute', 'ngCookies', 'uuid',
-        'ngFlash'])
+        'ngFlash','multipleSelect'])
         .config(config)
         .run(run);
 

@@ -12,6 +12,7 @@
         };
 
         ApiMiddleware.prototype.getFileList = function(files) {
+            console.log(files);
             return (files || []).map(function(file) {
                 return file && file.model.fullPath();
             });

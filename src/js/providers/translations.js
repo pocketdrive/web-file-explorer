@@ -65,6 +65,7 @@
             no_folders_in_folder: 'This folder not contains children folders',
             select_this: 'Select this',
             generate_sharable_link: 'Get link',
+            share:'Share',
             ok: 'ok',
             copy_the_sharable_link_for: 'Copy the sharable link for',
             generate_link: 'Generate Link',
