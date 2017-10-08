@@ -361,68 +361,70 @@
     </div>
 </div>
 
-<div class="modal animated fadeIn" id="share">
+<div class="modal animated fadeIn" id="sharefolder">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form ng-submit="changePermissions()">
+            <form >
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span>
                         <span class="sr-only">{{"close" | translate}}</span>
                     </button>
-                    <h4 class="modal-title">{{'change_permissions' | translate}}</h4>
+                    <h4 class="modal-title">{{'share' | translate}}</h4>
                 </div>
                 <div class="modal-body">
+                    <label>Enter name of the user</label>
                     <multiple-autocomplete ng-model="tempdata.selectedList"
-                                           object-property="name"
-                                           suggestions-arr="optionsList">
-                        <!--<input placeholder=" To: username" class="form-control"  autofocus="autofocus"><br>-->
-
+                                           object-property="fullname"
+                                           suggestions-arr="users"
+                    placeholder="Name">
                     </multiple-autocomplete>
-                    <!--<input placeholder=" To: username" class="form-control"  autofocus="autofocus"><br>-->
+                    <hr>
                     <table class="table mb0">
-                        <thead>
-                        <tr>
-                            <th>{{'permissions' | translate}}</th>
-                            <th class="col-xs-1 text-center">{{'read' | translate}}</th>
-                            <th class="col-xs-1 text-center">{{'write' | translate}}</th>
-                            <!--<th class="col-xs-1 text-center">{{'exec' | translate}}</th>-->
-                        </tr>
-                        </thead>
                         <tbody>
-                        <!--<tr ng-repeat="(permTypeKey, permTypeValue) in temp.tempModel.perms">-->
-                            <!--&lt;!&ndash;<td>{{permTypeKey | translate}}</td>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center"&ndash;&gt;-->
-                                <!--&lt;!&ndash;ng-click="main()">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<label class="col-xs-12">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;&lt;!&ndash;<input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]">&ndash;&gt;&ndash;&gt;-->
-                                <!--&lt;!&ndash;</label>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                        <!--</tr>-->
+                        <tr ng-repeat="user in tempdata.selectedList">
+                            <td><span>{{user.name}}</span><br><span style="color:#9d9d9d;">{{user.username}}</span></td>
+                           <td valign="center">  <select ng-init="tempdata.perms[user.username]='rw'" ng-model="tempdata.perms[user.username]">
+                               <option ng-selected="true" value="rw">Can edit</option>
+                               <option value="r">Can view only</option>
+
+                           </select> </td>
+                            <td></td>
+                        </tr>
+
                         </tbody>
                     </table>
-                    <!--<div class="checkbox" ng-show="config.enablePermissionsRecursive && selectionHas('dir')">-->
-                        <!--<label>-->
-                            <!--<input type="checkbox" ng-model="temp.tempModel.recursive"> {{'recursive' | translate}}-->
-                        <!--</label>-->
-                    <!--</div>-->
-                    <!--<div class="clearfix mt10">-->
-                  <!--<span class="label label-primary pull-left" ng-hide="temp.multiple">-->
-                    <!--{{'original' | translate}}: -->
-                    <!--{{temp.model.perms.toCode(selectionHas('dir') ? 'd':'-')}} -->
-                    <!--({{temp.model.perms.toOctal()}})-->
-                  <!--</span>-->
-                        <!--<span class="label label-primary pull-right">-->
-                    <!--{{'changes' | translate}}: -->
-                    <!--{{temp.tempModel.perms.toCode(selectionHas('dir') ? 'd':'-')}} -->
-                    <!--({{temp.tempModel.perms.toOctal()}})-->
-                  <!--</span>-->
-                    <!--</div>-->
+                    <h4 ng-show="candidates.length>0">Already shared users</h4>
+                    <table class="table mb0">
+                        <tbody>
+                        <tr ng-repeat="user in candidates " >
+                            <td><span>{{user.name}}</span><br><span style="color:#9d9d9d;">{{user.username}}</span></td>
+                            <td>  <select ng-if="user.permission==='rw'" ng-init="tempdata.cand[user.username]='rw'" ng-model="tempdata.cand[user.username]">
+                                <option ng-selected="true" value="rw">Can edit</option>
+                                <option value="r">Can view only</option>
+
+                            </select>
+                                <select ng-if="user.permission==='r'" ng-init="tempdata.cand[user.username]='r'" ng-model="tempdata.cand[user.username]">
+                                    <option  value="rw">Can edit</option>
+                                    <option ng-selected="true" value="r">Can view only</option>
+
+                                </select>
+                            </td>
+                            <td>
+                                <a href="" tabindex="-1" ng-click="removeUser(user)">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
                     <div ng-include data-src="'error-bar'" class="clearfix"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{"cancel" | translate}}</button>
-                    <button type="submit" class="btn btn-primary" ng-disabled="">{{'change' | translate}}</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="shareFolder()" ng-disabled="">{{'share' | translate}}</button>
                 </div>
             </form>
         </div>
@@ -488,7 +490,7 @@
             <!--</form>-->
         <!--</div>-->
     <!--</div>-->
-<!--</div>-->
+</div>
 
 <div class="modal animated fadeIn" id="linkshare">
     <div class="modal-dialog">

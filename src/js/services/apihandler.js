@@ -251,6 +251,59 @@
                 return deferred.promise;
             };
 
+            ApiHandler.prototype.shareFolder = function(path,users,candidates,removedCandidates, issharedFolder){
+                var self = this;
+                var deferred = $q.defer();
+                var data = {
+                    action: 'sharefolder',
+                    path:path,
+                    users:users,
+                    candidates:candidates,
+                    removedcandidates:removedCandidates,
+                    issharedFolder:issharedFolder
+                };
+
+                self.inprocess = true;
+                self.error = '';
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
+                });
+
+                return deferred.promise;
+
+            };
+
+            ApiHandler.prototype.getUsers = function(path,issharedFolder){
+                var self = this;
+                var deferred = $q.defer();
+                var data = {
+                    action: 'getusers',
+                    path:path,
+                    issharedFolder:issharedFolder
+                };
+
+                self.inprocess = true;
+                self.error = '';
+
+                sh.send(data, (message) => {
+                    if (message.type === 'webConsoleRelay') {
+                        self.deferredHandler(message.message, deferred, 200);
+                        self.inprocess = false;
+                    }
+                    if (message === 'error') {
+                        self.deferredHandler({}, deferred, 503);
+                    }
+                });
+
+                return deferred.promise;
+            };
+
             ApiHandler.prototype.getUrl = function (apiUrl, path) {
                 var data = {
                     action: 'download',

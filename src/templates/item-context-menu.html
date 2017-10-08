@@ -14,7 +14,7 @@
         </li>
 
         <li ng-show="singleSelection() && singleSelection().isFolder() && temps[0].model.sharableFolder && !temps[0].model.sharedFolder">
-            <a href="" tabindex="-1" ng-click="modal('share')">
+            <a href="" tabindex="-1" ng-click="modal('sharefolder') && getUsers()">
                 <i class="glyphicon glyphicon-share"></i> {{'share' | translate}}
             </a>
         </li>
@@ -68,7 +68,7 @@
         <!--</li>-->
 
         <!--<li ng-show="config.allowedActions.changePermissions">-->
-            <!--<a href="" tabindex="-1" ng-click="modal('changepermissions')">-->
+            <!--<a href="" tabindex="-1" ng-click="modal('changepermissions') && getUsers()">-->
                 <!--<i class="glyphicon glyphicon-lock"></i> {{'permissions' | translate}}-->
             <!--</a>-->
         <!--</li>-->

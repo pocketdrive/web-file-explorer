@@ -12,7 +12,6 @@
         };
 
         ApiMiddleware.prototype.getFileList = function(files) {
-            console.log(files);
             return (files || []).map(function(file) {
                 return file && file.model.fullPath();
             });
@@ -30,6 +29,10 @@
             return this.apiHandler.shareLink(fileManagerConfig.listUrl, item);
         };
 
+        ApiMiddleware.prototype.shareFolder = function(path,users,candidates, removedCandidates, issharedFolder){
+            return this.apiHandler.shareFolder(path,users,candidates,removedCandidates,issharedFolder);
+        }
+
         ApiMiddleware.prototype.trackChanges = function(deviceID,deviceName){
             this.apiHandler.trackChanges(deviceID,deviceName);
         };
@@ -39,6 +42,10 @@
             var singleFilename = items.length === 1 ? files[0].tempModel.name : undefined;
             return this.apiHandler.copy(fileManagerConfig.copyUrl, items, this.getPath(path), singleFilename);
         };
+
+        ApiMiddleware.prototype.getUsers = function(path,issharedFolder){
+            return this.apiHandler.getUsers(path,issharedFolder);
+        }
 
         ApiMiddleware.prototype.move = function(files, path) {
             var items = this.getFileList(files);
@@ -126,6 +133,7 @@
 
         ApiMiddleware.prototype.changePermissions = function(files, dataItem) {
             var items = this.getFileList(files);
+            console.log(dataItem.tempModel.perms);
             var code = dataItem.tempModel.perms.toCode();
             var octal = dataItem.tempModel.perms.toOctal();
             var recursive = !!dataItem.tempModel.recursive;
