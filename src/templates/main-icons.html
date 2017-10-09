@@ -3,9 +3,10 @@
         <div class="col-120" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}})" ng-show="!fileNavigator.requesting && !fileNavigator.error">
             <a href="" class="thumbnail text-center" ng-click="selectOrUnselect(item, $event)" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" title="{{item.model.name}} ({{item.model.size | humanReadableFileSize}})" ng-class="{selected: isSelected(item)}">
                 <div class="item-icon">
-                    <i class="glyphicon glyphicon-folder-open" ng-show="!item.model.sharedFolder && item.model.type === 'dir'"></i>
-                    <i class="glyphicon glyphicon-credit-card" ng-show="item.model.sharedFolder && item.model.type === 'dir'"></i>
-                    <i class="glyphicon glyphicon-file" data-ext="{{ item.model.name | fileExtension }}" ng-show="item.model.type === 'file'" ng-class="{'item-extension': config.showExtensionIcons}"></i>
+                    <i class="fa fa-folder-open fa-lg" ng-show="!item.model.issharedFolder && !item.model.sharedFolder && item.model.type === 'dir'"></i>
+                    <i class="fa fa-folder-open fa-lg" ng-class="{'item-extension-share': config.showExtensionIcons}" ng-show="item.model.issharedFolder && !item.model.sharedFolder && item.model.type === 'dir'"></i>
+                    <i class="fa fa-folder-open fa-lg" ng-class="{'item-extension-shareme': config.showExtensionIcons}" ng-show="!item.model.issharedFolder && item.model.sharedFolder && item.model.type === 'dir'"></i>
+                    <i class="fa fa-file" data-ext="{{ item.model.name | fileExtension }}" ng-show="item.model.type === 'file'" ng-class="{'item-extension': config.showExtensionIcons}"></i>
                 </div>
                 {{item.model.name | strLimit : 11 }}
             </a>

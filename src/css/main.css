@@ -13,8 +13,7 @@ body {
   margin-bottom: 0;
   border: 0;
   border-radius: 0;
-  color:#008080;
-  /*color: #fff;*/
+  color: #fff;
 }
 
 .navbar .navbar-collapse {
@@ -347,18 +346,34 @@ table th > a:focus {
   padding-left: 20px;
 }
 
+.item-extension-share::after{
+  content: url('../img/share.png');
+  left: 20px;
+  position: absolute;
+  top: 2px;}
+
+.item-extension-shareme::after{
+  content: url('../img/shareme.png');
+  left: 20px;
+  position: absolute;
+  top: 2px;}
+
 .item-extension::after {
   font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
   content: attr(data-ext);
-  left: 4px;
+  left: 9px;
   position: absolute;
   color: #fff;
   font-size: 9px;
   text-transform: uppercase;
-  top: 21px;
+  top: 23px;
 }
 
 .selected .item-extension::after {
+  color: #2196F3;
+}
+
+.selected .item-extension-share::after {
   color: #2196F3;
 }
 
@@ -384,11 +399,11 @@ table th > a:focus {
 }
 
 .navbar-inverse .navbar-toggle .icon-bar {
-  background: #fff;
+  background: #F08080;
 }
 
 .navbar-inverse .navbar-form input[type="text"] {
-  color: #7a7a7a;
+  background: #F08080;
   box-shadow: none;
   margin: 0 10px;
 }

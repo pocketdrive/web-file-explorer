@@ -180,7 +180,6 @@
                     return $scope.openEditItem(item);
                 }
             };
-
             $scope.openImagePreview = function () {
                 var item = $scope.singleSelection();
                 $scope.apiMiddleware.apiHandler.inprocess = true;
