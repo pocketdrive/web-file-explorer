@@ -279,19 +279,19 @@
             ApiHandler.prototype.getUrl = function (apiUrl, path) {
                 const user = $rootScope.globals.currentUser;
                 
-                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/?mode=fileOpen&path=${path}`;
+                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${sh.PDdeviceID}/?mode=fileOpen&path=${path}`;
             };
 
             ApiHandler.prototype.getMultiUrl = function (apiUrl, items) {
                 const user = $rootScope.globals.currentUser;
 
-                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
+                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${sh.PDdeviceID}/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
             };
             
             ApiHandler.prototype.getUploadUrl = function (apiUrl, destiantion) {
                 const user = $rootScope.globals.currentUser;
 
-                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/?mode=upload&path=${destiantion}`;
+                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${sh.PDdeviceID}/?mode=upload&path=${destiantion}`;
             };
 
             ApiHandler.prototype.download = function (apiUrl, itemPath, toFilename, downloadByAjax, forceNewWindow) {
