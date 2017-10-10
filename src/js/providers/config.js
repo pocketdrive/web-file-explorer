@@ -1,15 +1,13 @@
 (function(angular) {
     'use strict';
     angular.module('FileManagerApp').provider('fileManagerConfig', function() {
-        console.log(window.localStorage);
-
-
         var values = {
             appName: 'angular-filemanager v1.5',
             defaultLang: 'en',
 
             apiUrl: 'localhost',
             apiPort: '8080',
+            linkSharePort: '4200',
             activeUser: 'anuradha',
             activeDevice: 'PD',
 

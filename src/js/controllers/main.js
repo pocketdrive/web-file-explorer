@@ -211,7 +211,7 @@
 
             $scope.modalWithPathSelector = function (id) {
                 $rootScope.selectedModalPath = $scope.fileNavigator.currentPath;
-                console.log($rootScope.selectedModalPath);
+
                 return $scope.modal(id);
             };
 
@@ -241,7 +241,6 @@
                     if ($scope.candidates && $scope.candidates.length>0) {
 
                         for (let user of $scope.candidates) {
-                                console.log(user);
                                 if (user.permission !== $scope.tempdata.cand[user.username]) {
                                     user.permission = $scope.tempdata.cand[user.username];
                                     user.changepermission = true;
@@ -285,9 +284,11 @@
 
             $scope.getSharableLink = function () {
                 $scope.shareLinkTemp = null;
-                var item = $scope.singleSelection().model.fullPath();
+                const item = $scope.singleSelection().model.fullPath();
+                const user = $rootScope.globals.currentUser;
+
                 $scope.apiMiddleware.shareLink($scope.singleSelection().model.fullPath()).then(function (data) {
-                    $scope.shareLinkTemp = `http://45.55.94.191:4200/anuradha/device1234/${data.result.id}`;
+                    $scope.shareLinkTemp = `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/${data.result.id}`;
                 });
             };
 
@@ -375,7 +376,7 @@
                     $scope.apiMiddleware.apiHandler.error = $translate.instant('error_cannot_move_same_path');
                     return false;
                 }
-                // console.log($scope.temps);
+
                 $scope.apiMiddleware.move($scope.temps, $rootScope.selectedModalPath).then(function () {
                     $scope.fileNavigator.refresh();
                     $scope.modal('move', true);
@@ -409,8 +410,10 @@
             };
 
             $scope.addForUpload = function ($files) {
-                $scope.uploadFileList = $scope.uploadFileList.concat($files);
-                $scope.modal('uploadfile');
+                // $scope.uploadFileList = $scope.uploadFileList.concat($files);
+                // $scope.modal('uploadfile');
+                $scope.apiMiddleware.upload($scope.uploadFileList, $scope.fileNavigator.currentPath)
+                // $scope.apiHandler.upload($scope.uploadFileList, $scope.fileNavigator.currentPath)
             };
 
             $scope.removeFromUpload = function (index) {
@@ -426,6 +429,7 @@
                     var errorMsg = data.result && data.result.error || $translate.instant('error_uploading_files');
                     $scope.apiMiddleware.apiHandler.error = errorMsg;
                 });
+                
             };
 
             var validateSamePath = function (item) {

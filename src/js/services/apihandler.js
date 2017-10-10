@@ -1,7 +1,7 @@
 (function (angular, $) {
     'use strict';
-    angular.module('FileManagerApp').service('apiHandler', ['$http', '$q', '$window', '$translate', 'Upload', 'sockHandler',
-        function ($http, $q, $window, $translate, Upload, sockHandler) {
+    angular.module('FileManagerApp').service('apiHandler', ['$http','$rootScope', '$q', '$window', '$translate', 'Upload', 'sockHandler', 'fileManagerConfig',
+        function ($http, $rootScope, $q, $window, $translate, Upload, sockHandler, fileManagerConfig) {
 
             $http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -152,37 +152,9 @@
             };
 
             ApiHandler.prototype.upload = function (apiUrl, destination, files) {
-                var self = this;
-                var deferred = $q.defer();
-                self.inprocess = true;
-                self.progress = 0;
-                self.error = '';
-
-                var data = {
-                    destination: destination
-                };
-
-                for (var i = 0; i < files.length; i++) {
-                    data['file-' + i] = files[i];
-                }
-
-                if (files && files.length) {
-                    Upload.upload({
-                        url: apiUrl,
-                        data: data
-                    }).then(function (data) {
-                        self.deferredHandler(data.data, deferred, data.status);
-                    }, function (data) {
-                        self.deferredHandler(data.data, deferred, data.status, 'Unknown error uploading files');
-                    }, function (evt) {
-                        self.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total)) - 1;
-                    })['finally'](function () {
-                        self.inprocess = false;
-                        self.progress = 0;
-                    });
-                }
-
-                return deferred.promise;
+                var url = this.getUploadUrl(apiUrl, destination);
+                
+                return !!$window.open(url, '_blank', 'winPop');
             };
 
             ApiHandler.prototype.getContent = function (apiUrl, itemPath) {
@@ -305,80 +277,33 @@
             };
 
             ApiHandler.prototype.getUrl = function (apiUrl, path) {
-                var data = {
-                    action: 'download',
-                    path: path
-                };
-                // return path && [apiUrl, $.param(data)].join('?');
-                return `http://45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&path=${path}`;
+                const user = $rootScope.globals.currentUser;
+                
+                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/?mode=fileOpen&path=${path}`;
             };
 
             ApiHandler.prototype.getMultiUrl = function (apiUrl, items) {
-                var data = {
-                    action: 'download',
-                    // path: path
-                };
-                // return path && [apiUrl, $.param(data)].join('?');
-                return `http://45.55.94.191:4200/anuradha/device1234/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
+                const user = $rootScope.globals.currentUser;
+
+                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/?mode=fileOpen&multi=true&path=${JSON.stringify(items)}`;
+            };
+            
+            ApiHandler.prototype.getUploadUrl = function (apiUrl, destiantion) {
+                const user = $rootScope.globals.currentUser;
+
+                return `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/?mode=upload&path=${destiantion}`;
             };
 
             ApiHandler.prototype.download = function (apiUrl, itemPath, toFilename, downloadByAjax, forceNewWindow) {
-                // var self = this;
                 var url = this.getUrl(apiUrl, itemPath);
 
-                // var a = $window.document.createElement('a');
-                // a.href = url;
-                // a.target = '_blank';
-                // // $window.document.(a);
-                // a.click();
-                // var win = $window.open(url, '_blank', 'winPop');
-                // setTimeout(() => {win.location.replace(url);}, 1000);
-                // if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
-                //     !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
-                    return !!$window.open(url, '_blank', 'winPop');
-                // }
-
-                // var deferred = $q.defer();
-                // self.inprocess = true;
-                // $http.get(url).success(function (data) {
-                //     var bin = new $window.Blob([data]);
-                //     deferred.resolve(data);
-                //     $window.saveAs(bin, toFilename);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
-                // return deferred.promise;
+                return !!$window.open(url, '_blank', 'winPop');
             };
 
             ApiHandler.prototype.downloadMultiple = function (apiUrl, items, toFilename, downloadByAjax, forceNewWindow) {
-                // var self = this;
-                // var deferred = $q.defer();
-                // var data = {
-                //     action: 'downloadMultiple',
-                //     items: items,
-                //     toFilename: toFilename
-                // };
-                // var url = [apiUrl, $.param(data)].join('?');
                 var url = this.getMultiUrl(apiUrl, items);
-
-                // if (!downloadByAjax || forceNewWindow || !$window.saveAs) {
-                //     !$window.saveAs && $window.console.log('Your browser dont support ajax download, downloading by default');
-                    return !!$window.open(url, '_blank', '');
-                // }
-                //
-                // self.inprocess = true;
-                // $http.get(apiUrl).success(function (data) {
-                //     var bin = new $window.Blob([data]);
-                //     deferred.resolve(data);
-                //     $window.saveAs(bin, toFilename);
-                // }).error(function (data, code) {
-                //     self.deferredHandler(data, deferred, code, $translate.instant('error_downloading'));
-                // })['finally'](function () {
-                //     self.inprocess = false;
-                // });
-                // return deferred.promise;
+                
+                return !!$window.open(url, '_blank', '');
             };
 
             ApiHandler.prototype.shareLink = function (apiUrl, item) {

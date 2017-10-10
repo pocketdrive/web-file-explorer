@@ -63,7 +63,7 @@
             }
 
             var destination = this.getPath(path);
-
+            console.log(destination)
             return this.apiHandler.upload(fileManagerConfig.uploadUrl, destination, files);
         };
 

@@ -146,7 +146,6 @@
 
                         for (var o in this.fileList) {
                             var item = this.fileList[o];
-                            console.log(item);
                             item instanceof Item && item.isFolder() && recursive(this.history[n], item, path);
                         }
                     } else {
