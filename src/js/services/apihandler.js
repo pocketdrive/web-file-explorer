@@ -322,7 +322,7 @@
                     if (message.type === 'webConsoleRelay') {
                         var link = `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${sh.PDdeviceID}/${message.message.result.id}`;
                         
-                        self.deferredHandler(link, deferred, 200);
+                        self.deferredHandler({link}, deferred, 200);
                         self.inprocess = false;
                     }
                     if (message === 'error') {

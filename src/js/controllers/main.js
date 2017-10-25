@@ -288,8 +288,7 @@
                 const user = $rootScope.globals.currentUser;
 
                 $scope.apiMiddleware.shareLink($scope.singleSelection().model.fullPath()).then(function (data) {
-                    console.log(data);
-                    $scope.shareLinkTemp = data;
+                    $scope.shareLinkTemp = data.link;
                 });
             };
 
