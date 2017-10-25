@@ -288,7 +288,8 @@
                 const user = $rootScope.globals.currentUser;
 
                 $scope.apiMiddleware.shareLink($scope.singleSelection().model.fullPath()).then(function (data) {
-                    $scope.shareLinkTemp = `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${user.device.uuid}/${data.result.id}`;
+                    console.log(data);
+                    $scope.shareLinkTemp = data;
                 });
             };
 

@@ -313,13 +313,15 @@
                     action: 'linkshare',
                     item: item
                 };
+                var user = $rootScope.globals.currentUser;
+                var link = `http://${fileManagerConfig.apiUrl}:${fileManagerConfig.linkSharePort}/${user.username}/${sh.PDdeviceID}/${message.message.result.id}`;
                 
                 self.inprocess = true;
                 self.error = '';
 
                 sh.send(data, (message) => {
                     if (message.type === 'webConsoleRelay') {
-                        self.deferredHandler(message.message, deferred, 200);
+                        self.deferredHandler(link, deferred, 200);
                         self.inprocess = false;
                     }
                     if (message === 'error') {
